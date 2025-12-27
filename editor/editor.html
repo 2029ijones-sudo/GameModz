@@ -22,6 +22,10 @@
   <div id="topbar">
     <div class="logo">GameMods Studio</div>
     <div id="session"></div>
+    <div id="topButtons">
+      <button id="saveWorldBtn">Publish World</button>
+      <button id="exportWorldBtn">Export World</button>
+    </div>
   </div>
 
   <!-- Main Workspace -->
@@ -76,6 +80,12 @@
 <script src="../engine/loader.js"></script>
 <script src="../engine/modAPI.js"></script>
 <script src="editor.js"></script>
+
+<script>
+  // Hook Save/Export buttons from top bar to editor.js functions
+  document.getElementById("saveWorldBtn").addEventListener("click", saveWorld);
+  document.getElementById("exportWorldBtn").addEventListener("click", exportWorld);
+</script>
 
 </body>
 </html>
