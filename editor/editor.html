@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GameMods Studio</title>
+  <link rel="stylesheet" href="editor.css">
+
+  <!-- Three.js & FBX Loader -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/loaders/FBXLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/TransformControls.js"></script>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<div id="studio">
+
+  <!-- Top Bar -->
+  <div id="topbar">
+    <div class="logo">GameMods Studio</div>
+    <div id="session"></div>
+  </div>
+
+  <!-- Main Workspace -->
+  <div id="workspace">
+
+    <!-- Left Dock -->
+    <div id="leftDock">
+      <!-- Explorer Panel -->
+      <div class="panel">
+        <h3>Explorer</h3>
+        <div id="explorer"></div>
+      </div>
+      <!-- Assets Panel -->
+      <div class="panel">
+        <h3>Assets</h3>
+        <input type="file" multiple id="fbxInput">
+      </div>
+    </div>
+
+    <!-- 3D Viewport -->
+    <div id="viewport"></div>
+
+    <!-- Right Dock -->
+    <div id="rightDock">
+      <div class="panel">
+        <h3>Properties</h3>
+        <div id="properties">
+          <p>Select an object to edit its properties.</p>
+          <label>Position X: <input type="number" step="0.1" id="propPosX"></label><br>
+          <label>Position Y: <input type="number" step="0.1" id="propPosY"></label><br>
+          <label>Position Z: <input type="number" step="0.1" id="propPosZ"></label><br>
+          <label>Rotation X: <input type="number" step="1" id="propRotX"></label><br>
+          <label>Rotation Y: <input type="number" step="1" id="propRotY"></label><br>
+          <label>Rotation Z: <input type="number" step="1" id="propRotZ"></label><br>
+          <label>Scale: <input type="number" step="0.1" id="propScale" value="1"></label>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Dock -->
+  <div id="bottomDock">
+    <div id="codeTabs">Script Editor</div>
+    <textarea id="codeEditor" placeholder="Write your mod/script here..."></textarea>
+  </div>
+
+</div>
+
+<!-- Engine and Editor Scripts -->
+<script src="../engine/engine.js"></script>
+<script src="../engine/loader.js"></script>
+<script src="../engine/modAPI.js"></script>
+<script src="editor.js"></script>
+
+</body>
+</html>
