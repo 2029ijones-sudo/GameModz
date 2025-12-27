@@ -206,29 +206,72 @@ function runScript() {
 // 12️⃣ SAVE & EXPORT
 // ==============================
 
+async function pushWorldToGitHub(world, playerName, githubToken) {
+  const owner = "2029ijones-sudo";
+  const repo = "GameModz";
+  const path = `Worlds/${playerName}/${world.name}/public/world.json`;
+
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(world, null, 2)))); // Base64
+
+  // Check if file exists to get sha for update
+  let sha = null;
+  try {
+    const getResp = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`);
+    if (getResp.ok) {
+      const data = await getResp.json();
+      sha = data.sha;
+    }
+  } catch (err) {
+    console.log("File does not exist, creating new...");
+  }
+
+  const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+    method: "PUT",
+    headers: {
+      "Authorization": `token ${githubToken}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      message: `Publish world ${world.name} by ${playerName}`,
+      content,
+      sha
+    })
+  });
+
+  if (!response.ok) {
+    const errData = await response.json();
+    throw new Error(errData.message || "GitHub API error");
+  }
+
+  // Return GitHub Pages URL for world
+  return `https://${owner}.github.io/${repo}/${path}`;
+}
+
+// Save and publish world
 async function saveWorld() {
   if (mode !== "online") return;
 
-  const url = `https://GameModz.github.io/Worlds/${playerName}/${world.name}/public`;
+  const githubToken = "YOUR_PERSONAL_ACCESS_TOKEN"; // ⚠️ do NOT expose publicly
 
-  const { error } = await supabase.from("worlds").insert({
-    world_name: world.name,
-    player_name: playerName,
-    url
-  });
+  try {
+    const url = await pushWorldToGitHub(world, playerName, githubToken);
 
-  if (error) alert("Save failed: " + error.message);
-  else alert("World published!");
+    // Save in Supabase
+    const { error } = await supabase.from("worlds").insert({
+      world_name: world.name,
+      player_name: playerName,
+      url
+    });
+
+    if (error) alert("Supabase save failed: " + error.message);
+    else alert("World published! URL: " + url);
+
+  } catch (err) {
+    console.error("GitHub push failed:", err);
+    alert("Failed to publish world: " + err.message);
+  }
 }
 
-function exportWorld() {
-  const data = JSON.stringify(world);
-  const blob = new Blob([data], { type: "application/json" });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = `${world.name}.world`;
-  link.click();
-}
 
 // ==============================
 // 13️⃣ UI BUTTONS
